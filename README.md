@@ -60,3 +60,11 @@ Login: user `user`, password from
 - [x] Deployed to the cluster with RuntimePolicy applied (auto-placement blocked by operator auth)
 - [ ] Dataspace: consumer connector configured in the ENACT SDK (API V3 detected); awaiting API key to
       negotiate and transfer the carbon-intensity asset. The app currently uses a sample utility file.
+
+## ENACT SDK workflow
+
+| Step | SDK module | Result |
+|---|---|---|
+| Package | Application Packaging | Helm chart in `greencharge/enact-chart/` (we adapted the generated `/health` probes to TCP + startup probe, and added the `name: greencharge` label and `enact.eu/role: edge` node selector) |
+| Policy | Application Policies | `greencharge/.enact/policies/greencharge-policy.yaml`, validated against the ENACT CRD |
+| Deploy | Application Deployment | Applied RuntimePolicy, Service, Deployment and Ingress to the Kind cluster; pod running on `enact-dev-worker`. The SDK reports "RuntimePolicy did not resolve a node: no available metrics", the same operator/TDCME auth gap described above. |
