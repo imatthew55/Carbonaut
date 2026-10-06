@@ -50,15 +50,18 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          startupProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+            failureThreshold: 36
           livenessProbe:
-            httpGet:
-              path: /chargers
+            tcpSocket:
               port: http
             initialDelaySeconds: 15
             periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /chargers
+            tcpSocket:
               port: http
             initialDelaySeconds: 10
             periodSeconds: 5

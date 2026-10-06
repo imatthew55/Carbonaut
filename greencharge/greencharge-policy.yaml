@@ -1,0 +1,22 @@
+apiVersion: enact.eu/v1alpha1
+kind: RuntimePolicy
+metadata:
+  name: greencharge-policy
+  namespace: enact
+spec:
+  appLabels:
+    name: greencharge          # matches the pod label we set with Helm
+  appNamespace: enact
+  cpu:
+    min: 1
+    max: 4
+  greenEnergy:
+    minRatio: 0.6
+    mode: Soft
+  location:
+    regions:
+      - eu-west
+    mode: Hard
+  availability:
+    nodeAvailability: 0.9
+    requireReady: true
