@@ -1,126 +1,707 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GreenCharge ⚡🌱</title>
-<style>
-  :root{
-    --bg:#0f1720; --bg2:#131e2a; --panel:#ffffff; --ink:#1a2430; --muted:#5b6b7a;
-    --line:#e3e9ef; --soft:#f4f7fa; --brand:#0e7f6b; --brand2:#12b886;
-    --green:#1a9e5a; --amber:#b7791f; --radius:16px; --shadow:0 8px 30px rgba(15,23,32,.08);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--soft);color:var(--ink);line-height:1.55}
-  .wrap{max-width:900px;margin:0 auto;padding:0 22px}
-  header{background:radial-gradient(1000px 400px at 70% -20%,rgba(18,184,134,.28),transparent),linear-gradient(180deg,var(--bg),var(--bg2));color:#eaf1f6;padding:40px 0 46px}
-  header h1{margin:0 0 6px;font-size:2rem;color:#fff}
-  header p{margin:0;color:#b9c7d3}
-  .badge{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#d7e2ec;font-size:.85rem;padding:7px 14px;border-radius:999px}
-  .badge .dot{width:9px;height:9px;border-radius:50%;background:#f0b429}
-  .badge.live .dot{background:#12b886;box-shadow:0 0 10px #12b886}
-  main{padding:34px 0 60px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);margin-bottom:20px}
-  h2{font-size:1.15rem;margin:0 0 14px}
-  .rec{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-  .rec .pick{flex:1;min-width:220px}
-  .rec .pick .name{font-size:1.5rem;font-weight:700;color:var(--brand)}
-  .rec .pick .sub{color:var(--muted);font-size:.92rem}
-  .score{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:1.4rem;background:conic-gradient(var(--brand2) var(--pct,0%),#e3e9ef 0)}
-  .score span{background:#fff;color:var(--brand);width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:1.2rem}
-  button{background:linear-gradient(135deg,var(--brand2),var(--brand));color:#fff;border:none;border-radius:10px;padding:11px 20px;font-size:.95rem;font-weight:600;cursor:pointer}
-  button:hover{filter:brightness(1.06)}
-  .bars{display:flex;flex-direction:column;gap:10px}
-  .bar{display:grid;grid-template-columns:110px 1fr 90px;align-items:center;gap:12px;font-size:.9rem}
-  .bar .track{background:#eef2f6;border-radius:8px;height:16px;overflow:hidden}
-  .bar .fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--brand2),var(--brand))}
-  .bar .val{color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
-  table{width:100%;border-collapse:collapse;font-size:.92rem}
-  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
-  th{color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.5px}
-  tr.full{opacity:.5}
-  .tag{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:6px}
-  .tag.win{background:#e6f3ea;color:#237a45}
-  .tag.full{background:#fbe6e2;color:#b0392b}
-  .muted{color:var(--muted);font-size:.9rem}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Toko Haven - Indonesisch take away restaurant en catering service in Leiden en omgeving">
+  <title>Toko Haven - Indonesisch take away restaurant en catering service in Leiden en omgeving</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- Bootstrap 3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Animate CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  
+  <!-- Custom CSS -->
+  <link href="assets/css/style.css" rel="stylesheet">
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <h1>GreenCharge ⚡🌱</h1>
-    <p>Routing EV drivers to the greenest available charger, right now.</p>
-    <div class="badge" id="source"><span class="dot"></span> checking carbon feed…</div>
-  </div>
-</header>
-
-<main class="wrap">
-  <div class="card">
-    <h2>Recommended charger</h2>
-    <div class="rec">
-      <div class="pick">
-        <div class="name" id="recName">—</div>
-        <div class="sub" id="recSub">Tap "Find greenest" to route.</div>
-        <div style="margin-top:14px"><button onclick="route()">Find greenest charger</button></div>
-      </div>
-      <div class="score" id="recScore"><span id="recScoreVal">–</span></div>
+    <!-- Preloader -->
+    <div id="pre-div">
+        <div id="loader"></div>
     </div>
-  </div>
-
-  <div class="card">
-    <h2>Grid carbon intensity by district</h2>
-    <div class="bars" id="carbonBars"><p class="muted">loading…</p></div>
-    <p class="muted" style="margin-top:14px">Greener = lower gCO₂/kWh. When the live utility feed is connected (ENACT Step 1), these values and the recommendation change automatically.</p>
-  </div>
-
-  <div class="card">
-    <h2>All chargers</h2>
-    <table>
-      <thead><tr><th>Charger</th><th>District</th><th>Availability</th><th></th></tr></thead>
-      <tbody id="chargerRows"><tr><td colspan="4" class="muted">loading…</td></tr></tbody>
-    </table>
-  </div>
-</main>
-
-<script>
-async function getJSON(url, opts){ const r = await fetch(url, opts); if(!r.ok) throw new Error(r.status); return r.json(); }
-
-async function loadCarbon(){
-  const c = await getJSON('/carbon');
-  const badge = document.getElementById('source');
-  const live = c.source.startsWith('live');
-  badge.className = 'badge' + (live ? ' live' : '');
-  badge.innerHTML = '<span class="dot"></span> Carbon feed: ' + c.source;
-
-  const entries = Object.entries(c.intensity).sort((a,b)=>a[1]-b[1]);
-  document.getElementById('carbonBars').innerHTML = entries.map(([d,v])=>{
-    const score = c.greenScore[d] ?? 0;
-    return `<div class="bar"><div>${d}</div><div class="track"><div class="fill" style="width:${score}%"></div></div><div class="val">${v} gCO₂/kWh</div></div>`;
-  }).join('');
-}
-
-async function loadChargers(){
-  const list = await getJSON('/chargers');
-  document.getElementById('chargerRows').innerHTML = list.map(c=>{
-    const full = c.availableSlots === 0;
-    return `<tr class="${full?'full':''}"><td>${c.name}</td><td>${c.district}</td><td>${c.availableSlots} / ${c.totalSlots} free</td><td>${full?'<span class="tag full">Full</span>':''}</td></tr>`;
-  }).join('');
-}
-
-async function route(){
-  const r = await getJSON('/route', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
-  if(!r.recommended){ document.getElementById('recSub').textContent = 'No chargers available.'; return; }
-  const rec = r.recommended;
-  document.getElementById('recName').textContent = rec.name;
-  document.getElementById('recSub').textContent = `${rec.district} · ${rec.carbonIntensity} gCO₂/kWh · ${rec.availableSlots} slots free`;
-  document.getElementById('recScoreVal').textContent = rec.greenScore;
-  document.getElementById('recScore').style.setProperty('--pct', rec.greenScore + '%');
-}
-
-async function refresh(){ try{ await Promise.all([loadCarbon(), loadChargers()]); await route(); }catch(e){ console.error(e); } }
-refresh();
-setInterval(loadCarbon, 15000);
-</script>
+    
+    <!-- Navigation -->
+    <div class="navbar navbar-default navbar-fixed-top" id="mainNav">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="assets/images/TokoHaven_logo2.png" alt="Toko Haven Logo" class="logo" />
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="#home">Home</a></li>
+                    <li><a href="#about">Toko Haven</a></li>
+                    <li><a href="#Menukaart">Menukaart</a></li>
+                    <li><a href="#Cateringservice">Cateringservice</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Home Section -->
+    <div id="home">
+        <div class="overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-9 col-sm-12 head-text">
+                        <h1 class="wow fadeInDown" data-wow-delay="0.2s">Welkom bij Toko Haven</h1>
+                        <div class="highlights">
+                            <p class="wow fadeInLeft" data-wow-delay="0.3s">
+                                <i class="fa fa-lightbulb"></i> Kwaliteit gegarandeerd
+                            </p>
+                            <p class="wow fadeInLeft" data-wow-delay="0.4s">
+                                <i class="fa fa-lightbulb"></i> Alles is dagvers !
+                            </p>
+                            <p class="wow fadeInLeft" data-wow-delay="0.5s">
+                                <i class="fa fa-lightbulb"></i> Al onze gerechten zijn halal
+                            </p>
+                            <p class="wow fadeInLeft" data-wow-delay="0.6s">
+                                <i class="fa fa-lightbulb"></i> Het adres in de regio Leiden voor al uw heerlijke maaltijden
+                            </p>
+                            <p class="wow fadeInLeft" data-wow-delay="0.7s">
+                                <i class="fa fa-lightbulb"></i> Catering service in heel de randstad
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12">
+                        <div class="opening-hours wow fadeInRight" data-wow-delay="0.3s">
+                            <h2>Openingstijden</h2>
+                            <div class="hours-list">
+                                <p>Maandag gesloten.</p>
+                                <p>Dinsdag 15.00 - 20.00 u.</p>
+                                <p>Woensdag 15.00 - 20.00 u.</p>
+                                <p>Donderdag 15.00 - 20.00 u.</p>
+                                <p>Vrijdag 15.00 - 20.00 u.</p>
+                                <p>Zaterdag 15.00 - 20.00 u.</p>
+                                <p>Zondag 15.00 - 20.00 u.</p>
+                            </div>
+                            <h3 class="phone-number">
+                                <a href="tel:+310715233066"><i class="fa fa-phone"></i> 071 523 3066</a>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- About Section -->
+    <div id="about" class="section-padding">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-12">
+                    <h2 class="section-title wow rollIn" data-wow-delay="0.3s">
+                        <strong>Over Toko Haven - the modern indonesian take away cuisine</strong>
+                    </h2>
+                    <p class="section-text wow fadeIn" data-wow-delay="0.5s">
+                        Het adres in de regio Leiden voor al uw heerlijke indonesische maaltijden<br><br>
+                        Wij zijn gevestigd op Haven 6 in Leiden. U bent van harte welkom in onze Toko Haven van dinsdag t/m zondag van 15:00 tot 20:00.<br/>
+                        Al onze gerechten zijn halal en worden dagelijks vers bereid.<br><br>
+                        Ook verzorgen wij cateringservice voor diverse gelegenheden zoals bijvoorbeeld trouwerijen, verjaardagen, bedrijfsfeesten.
+                        Voor meer informatie kunt u ons telefonisch bereiken op
+                        <a href="tel:+310715233066">071 523 3066</a> of gebruik ons contactformulier om een email te sturen.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Menu Section -->
+    <div id="Menukaart" class="section-padding menu-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-12">
+                    <h2 class="section-title wow rollIn" data-wow-delay="0.3s">
+                        <strong>MENUKAART</strong>
+                    </h2>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Column 1 -->
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="menu-column wow rotateIn" data-wow-delay="0.4s">
+                        <!-- Snacks -->
+                        <div class="menu-box">
+                            <div class="menu-title">Snacks</div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Loempia Kip</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Loempia Vegetarisch</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Lemper Kip</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Pastei Kip</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Martabak</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Risolles Kip (Heet/Gewoon)</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Bapao Kip</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Onde Onde</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Spekkoek</span>
+                                    <span class="item-price">€ 2,25</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Roti Rol</span>
+                                    <span class="item-price">€ 5,00</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Bijgerechten -->
+                        <div class="menu-box">
+                            <div class="menu-title">Bijgerechten</div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Nasi/Bami/Mihoen Goreng<br><small>(per 100gr)</small></span>
+                                    <span class="item-price">€ 1,50</span>
+                                </li>
+                                <li class="item-description">Gebakken rijst/bami/mihoen</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Nasi Kuning (per 100 gr)</span>
+                                    <span class="item-price">€ 1,50</span>
+                                </li>
+                                <li class="item-description">Gele rijst</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Witte Putih (per 100 gr)</span>
+                                    <span class="item-price">€ 1,00</span>
+                                </li>
+                                <li class="item-description">Witte rijst</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Saté Ayam (3 stokjes)</span>
+                                    <span class="item-price">€ 5,25</span>
+                                </li>
+                                <li class="item-description">Gegrilde kipsate met pindasaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Gado Gado (per portie)</span>
+                                    <span class="item-price">€ 6,00</span>
+                                </li>
+                                <li class="item-description">Gemengde groente met tahoe, tempe, ei en pindasaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Sambal Goreng Telor <img src="assets/images/peper.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 1,25</span>
+                                </li>
+                                <li class="item-description">Ei in pittige saus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Rotivel</span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Vegetarisch -->
+                        <div class="menu-box">
+                            <div class="menu-title">Vegetarisch <span class="subtitle">per 100 gr</span></div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Kentang Belado <img src="assets/images/peper.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="item-description">Zoetpittige aardappel met petébonen in sambalsaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Tahu Bali <img src="assets/images/peper3.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="item-description">Gebakken tahu in pittige balisaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Tempe Tahu Peté <img src="assets/images/peper2.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="item-description">Gebakken tempe, tahu en petébonen in pikante saus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Sambal Goreng Tempé <img src="assets/images/peper.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="item-description">Gebakken tempé in pikante saus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Tahu Kuning</span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="item-description">Gebakken tahu in kokosmelk saus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Column 2 -->
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="menu-column wow rotateIn" data-wow-delay="0.5s">
+                        <!-- Voordeelmenu's -->
+                        <div class="menu-box">
+                            <div class="menu-title">Voordeelmenu's <span class="subtitle">per portie</span></div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Vegetarisch Rames <img src="assets/images/peper.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 12,00</span>
+                                </li>
+                                <li class="item-description">Witte rijst/bami/nasi, 4 groenten, 1 ei</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Nasi Putih Rames <img src="assets/images/peper.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 12,50</span>
+                                </li>
+                                <li class="item-description">Witte rijst, 3 groenten, 2 vlees, 1 ei</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Nasi Goreng Rames</span>
+                                    <span class="item-price">€ 13,00</span>
+                                </li>
+                                <li class="item-description">Gebakken rijst, 3 groenten, 2 vlees, 1 ei</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Lontong Rames</span>
+                                    <span class="item-price">€ 13,00</span>
+                                </li>
+                                <li class="item-description">Blokjes kleefrijst, 3 groenten, 2 vlees, 1 ei</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Mihoen Rames <img src="assets/images/peper.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 11,50</span>
+                                </li>
+                                <li class="item-description">Gebakken mihoen, 3 groenten, 2 vlees, 1 ei</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Bami Goreng Rames</span>
+                                    <span class="item-price">€ 13,00</span>
+                                </li>
+                                <li class="item-description">Gebakken bami, 3 groenten, 2 vlees, 1 ei</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Nasi Kuning Rames</span>
+                                    <span class="item-price">€ 13,00</span>
+                                </li>
+                                <li class="item-description">Gele rijst, 3 groenten, 2 vlees, 1 ei</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Bami/Nasi/Mihoen Saté</span>
+                                    <span class="item-price">€ 11,00</span>
+                                </li>
+                                <li class="item-description">Gebakken bami/nasi goreng/mihoen met 3 stokjes saté</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Lontong Saté</span>
+                                    <span class="item-price">€ 11,50</span>
+                                </li>
+                                <li class="item-description">Blokjes kleefrijst met 3 stokjes kipsaté</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Surinaamse Roti (Vegetarisch)</span>
+                                    <span class="item-price">€ 10,50</span>
+                                </li>
+                                <li class="item-description">Aardappel, kouseband, 1 groente naar keuze en rotivel</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Surinaamse Roti (Kip)</span>
+                                    <span class="item-price">€ 11,00</span>
+                                </li>
+                                <li class="item-description">Aardappel, kip, kouseband en rotivel</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Surinaamse Roti (Rundvlees)</span>
+                                    <span class="item-price">€ 12,00</span>
+                                </li>
+                                <li class="item-description">Aardappel, rundvlees, kouseband en rotivel</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Rijsttafel -->
+                        <div class="menu-box">
+                            <div class="menu-title">Rijsttafel Toko Haven</div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Voor 2 tot 3 Personen</span>
+                                    <span class="item-price">€ 36,00</span>
+                                </li>
+                                <li class="item-description">2 soorten basis, 2 soorten vlees, 2 soorten groente, 2 stuks eieren, 4 stokjes kipsaté, seroendeng, gebakken uitjes, kroepoek en atjar</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Voor 4 tot 5 Personen</span>
+                                    <span class="item-price">€ 62,00</span>
+                                </li>
+                                <li class="item-description">4 soorten basis, 3 soorten vlees, 3 soorten groenten, 4 stuks eieren, 8 stokjes kipsaté, seroendeng, gebakken uitjes, kroepoek en atjar</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- 1-Persoons Menu -->
+                        <div class="menu-box special-box">
+                            <div class="menu-title">1-Persoons Toko Haven Menu voor maar € 10,00</div>
+                            <ul class="menu-list">
+                                <li class="item-description" style="text-align: center; font-size: 15px;">
+                                    Keuze uit:<br>
+                                    1 basis, 1 vlees of kipgerecht en<br>
+                                    1 groente of vegetarisch gerecht + 1 stokje kipsaté
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Dranken -->
+                        <div class="menu-box">
+                            <div class="menu-title">Dranken</div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Coca Cola</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Coca Cola Light</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Coca Cola Zero</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Fanta Orange</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">AA Drink</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Sprite</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Ice Tea</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Fernandes Diverse Smaken</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Foco Dranken Diverse Smaken</span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Spa Blauw 330ml</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Bintang Bier</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Singha Bier</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Heineken Bier</span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Tehbotol Sosro 250ml</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Column 3 -->
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="menu-column wow rotateIn" data-wow-delay="0.6s">
+                        <!-- Rundvlees -->
+                        <div class="menu-box">
+                            <div class="menu-title">Rundvlees <span class="subtitle">per 100 gr</span></div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Daging Bali <img src="assets/images/peper3.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 3,25</span>
+                                </li>
+                                <li class="item-description">Rundvlees in pikante balisaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Daging Semur</span>
+                                    <span class="item-price">€ 3,25</span>
+                                </li>
+                                <li class="item-description">Rundvlees in zoete ketjapsaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Daging Rendang <img src="assets/images/peper.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 3,25</span>
+                                </li>
+                                <li class="item-description">Rundvlees in milde kokossaus</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Kip -->
+                        <div class="menu-box">
+                            <div class="menu-title">Kip <span class="subtitle">per 100 gr</span></div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Ayam Ketjap</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="item-description">Kipfillet in zoete ketjepsaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Ayam Rujak <img src="assets/images/peper2.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="item-description">Kipfilet in pikante citroengrassaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Kip Cashew</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="item-description">Kipfilet met cashewnoten</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Ayam Kare</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="item-description">Kipfilet in kerriesaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Ayam Asem Manis</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="item-description">Kipballetjes in zoetzure saus</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Vis -->
+                        <div class="menu-box">
+                            <div class="menu-title">Vis <span class="subtitle">per 100 gr</span></div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Ikan Bali (stuksprijs) <img src="assets/images/peper2.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 3,50</span>
+                                </li>
+                                <li class="item-description">Makreel in pittige balisaus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Sambal Goreng Udang Peté <img src="assets/images/peper2.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 3,50</span>
+                                </li>
+                                <li class="item-description">Garnalen en petébonen in pikante saus</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Groente -->
+                        <div class="menu-box">
+                            <div class="menu-title">Groente <span class="subtitle">per 100 gr</span></div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Sayur Lodeh</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="item-description">Gemengde groenten in kokosmelk</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Tjap Tjay</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="item-description">Gemengde groenten</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Orak Arik</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="item-description">Roergebakken spitskool met ei en paprika</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Terong Belado</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="item-description">Aubergine in pikante saus</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Tumis Taugé</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="item-description">Roergebakken taugé en tahu</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Sambal Goreng Boontjes <img src="assets/images/peper.png" alt="pittig" class="spicy-icon"></span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="item-description">Pittige sperziebonen</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Oerap</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="item-description">Gemengde groenten met verse kokos</li>
+                                <li class="menu-item">
+                                    <span class="item-name">Atjar Ketimoen</span>
+                                    <span class="item-price">€ 2,00</span>
+                                </li>
+                                <li class="item-description">Komkommer in zuur</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Kroepoek & Chips -->
+                        <div class="menu-box">
+                            <div class="menu-title">Kroepoek & Chips <span class="subtitle">per zak</span></div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <span class="item-name">Borrel Kroepoek</span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Borrel Kroepoek Pedas</span>
+                                    <span class="item-price">€ 2,50</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Opak Pedis</span>
+                                    <span class="item-price">€ 3,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Emping</span>
+                                    <span class="item-price">€ 3,75</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Rempeyek</span>
+                                    <span class="item-price">€ 4,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Emping Blado</span>
+                                    <span class="item-price">€ 4,00</span>
+                                </li>
+                                <li class="menu-item">
+                                    <span class="item-name">Bananen Chips</span>
+                                    <span class="item-price">€ 3,75</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Catering Section -->
+    <div id="Cateringservice" class="catering-section">
+        <div class="overlay">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-12">
+                        <h2 class="section-title wow rollIn" data-wow-delay="0.3s">
+                            <strong>Catering service</strong>
+                        </h2>
+                        <p class="section-subtitle wow fadeIn" data-wow-delay="0.4s">
+                            Wij bieden u een zeer uitgebreide mogelijkheden voor catering service. Vraag vrijblijvend naar de mogelijkheden..
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-lg-offset-1 col-md-6 col-md-offset-1 col-sm-12">
+                        <div class="video-container wow rotateIn" data-wow-delay="0.4s">
+                            <iframe src="https://www.youtube.com/embed/34QPASaoBWg" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 catering-features">
+                        <div class="feature-item wow rotateIn" data-wow-delay="0.5s">
+                            <div class="feature-icon">
+                                <i class="fa fa-star-o fa-3x"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Bekijk onze video impressie</h3>
+                            </div>
+                        </div>
+                        <div class="feature-item wow rotateIn" data-wow-delay="0.6s">
+                            <div class="feature-icon">
+                                <i class="fa fa-heart fa-3x"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Verwen uw gasten !</h3>
+                                <p>Verwen uw gasten met de indonesische specialiteiten en bezorg ze een onvergetelijke culinaire avond !</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Section -->
+    <div id="contact" class="section-padding">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-12">
+                    <h2 class="section-title wow rollIn" data-wow-delay="0.3s">
+                        <strong>CONTACT</strong>
+                    </h2>
+                    <p class="contact-info wow fadeIn" data-wow-delay="0.4s">
+                        Haven 6 | 2312 MH | Leiden | 
+                        <a href="mailto:info@tokohaven.nl">info@tokohaven.nl</a> | 
+                        <a href="tel:+310715233066">Tel: 071 523 3066</a>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-12">
+                    <form id="contactForm" class="contact-form wow fadeIn" data-wow-delay="0.6s">
+                        <div class="form-group">
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="naam" 
+                                   name="naam" 
+                                   placeholder="Uw naam" 
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   placeholder="Uw emailadres" 
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" 
+                                      id="bericht" 
+                                      name="bericht" 
+                                      rows="6" 
+                                      placeholder="Uw bericht" 
+                                      required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-submit">VERZENDEN</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>&copy; 2015 - 2025 | Toko Haven | Haven 6 | 2312 MH | Leiden | 
+                        <a href="tel:+310715233066">Tel: 071 523 3066</a> | 
+                        <a href="mailto:info@tokohaven.nl">Email: info@tokohaven.nl</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <!-- WOW JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <!-- Custom JS -->
+    <script src="assets/js/custom.js"></script>
 </body>
 </html>
