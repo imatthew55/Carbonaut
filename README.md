@@ -59,7 +59,7 @@ Login: user `user`, password from
 - [x] Tests pass
 - [x] Deployed to the cluster with RuntimePolicy applied (auto-placement blocked by operator auth)
 - [ ] Dataspace: consumer connector configured in the ENACT SDK (API V3 detected); awaiting API key to
-      negotiate and transfer the carbon-intensity asset. The app currently uses a sample utility file.
+      negotiate and transfer the carbon-intensity asset. Until then GreenCharge runs on its built-in mock carbon data.
 
 ## ENACT SDK workflow
 
