@@ -15,7 +15,7 @@
 
 | Dataspace (ENACT SDK, Dataspaces) | `grid-carbon-intensity` asset negotiated and transferred from the ENACT provider (`enact-dataspace.iti.gr`); mounted into the pod as ConfigMap `carbon-feed`, read via `CARBON_FEED_FILE` | `greencharge/data/grid-carbon-intensity.json`, `greencharge/k8s/carbon-feed.sh` |
 
-Deployed with the ENACT SDK **Application Deployment** module to the local Kind cluster: RuntimePolicy, Service, Deployment and Ingress applied; the pod runs on **`enact-dev-worker`** (eu-west, green ratio 0.85).
+Deployed with the ENACT SDK **Application Deployment** module to the local Kind cluster: RuntimePolicy, Service, Deployment and Ingress applied. The policy operator selects **`enact-dev-worker`** (eu-west, green ratio 0.85) and the pod runs there.
 
 ## Run it
 
@@ -44,11 +44,11 @@ Energy per pod (Kepler) in Grafana or Prometheus:
 ## Findings
 
 - **Health probes:** the generated chart probes `/health`, which GreenCharge doesn't expose, and the app needs about 45 s to start, so it crash-looped. Fixed with TCP probes and a startup probe.
-- **Policy operator:** APPLPM ships with empty `METRICS_API_URL` and `CLUSTER_NAME`, so it runs with `NoopMetrics` and can't evaluate policies. We pointed it at TDCME at runtime (not in `values/`):
+- **Policy operator:** APPLPM ships with empty `METRICS_API_URL` and `CLUSTER_NAME`, so it ran with `NoopMetrics` and could not evaluate policies. We pointed it at the TDCME monitor API and, following the mentor's tip, passed TDCME's admin token as `METRICS_API_TOKEN`:
   ```bash
-  kubectl patch deploy applpm-controller-manager -n enact --type=json -p='[{"op":"replace","path":"/spec/template/spec/containers/0/env","value":[{"name":"METRICS_API_URL","value":"http://monitor-api-service.enact.svc.cluster.local:80"},{"name":"CLUSTER_NAME","value":"dev"}]}]'
+  kubectl patch deploy applpm-controller-manager -n enact --type=json -p='[{"op":"replace","path":"/spec/template/spec/containers/0/env","value":[{"name":"METRICS_API_URL","value":"http://monitor-api-service.enact.svc.cluster.local:80"},{"name":"CLUSTER_NAME","value":"dev"},{"name":"METRICS_API_TOKEN","valueFrom":{"secretKeyRef":{"name":"admin-token-secret","key":"token"}}}]}]'
   ```
-  It now reaches the monitor API but gets **401**: the API requires a Bearer token and the operator has no setting for one. The SDK deploy reports the same ("RuntimePolicy did not resolve a node: no available metrics"), so placement currently comes from the policy's node selector.
+  The operator now evaluates the RuntimePolicy on live TDCME metrics: status `DecisionReady`, `chosenNode: enact-dev-worker` (availability 1, green ratio 0.85, eu-west).
 
 ## Status
 
@@ -56,7 +56,7 @@ Energy per pod (Kepler) in Grafana or Prometheus:
 - [x] Packaged, policy-validated and deployed with the ENACT SDK; pod on `enact-dev-worker`
 - [x] Monitored in Grafana and Kepler under load
 - [x] **Dataspace:** `grid-carbon-intensity` transferred from the ENACT Data & Object Space with the SDK; the running app uses it (`live (dataspace file)`)
-- [ ] Automatic placement by the operator (blocked by the 401 above)
+- [x] Policy operator evaluates the RuntimePolicy on TDCME metrics: `DecisionReady`, chosen node `enact-dev-worker`
 
 ## License
 
